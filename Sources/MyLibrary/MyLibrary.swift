@@ -3,6 +3,8 @@ import mobileffmpeg
 
 public var JSONDIC = NSDictionary()
 public var videoId = String()
+public var EDITVIDEOPATH = String()
+public var UNZIPPATH = String()
 
 public enum NetworkError: Error {
     case badRequest
@@ -16,9 +18,12 @@ public struct MyLibrary {
     
     public func unZipFolder(){
     }
-    public func callback(jsonDic : NSDictionary, VideoId : String, completion: (Bool)->()) {
+    
+    public func callback(jsonDic : NSDictionary, VideoId : String, editVideoPath : String, unzipPath : String,  completion: (Bool)->()) {
         JSONDIC = jsonDic
         videoId = VideoId
+        EDITVIDEOPATH = editVideoPath
+        UNZIPPATH = unzipPath
         
         let rc = MobileFFmpeg.execute(withArguments: getString())
 
@@ -35,10 +40,7 @@ public struct MyLibrary {
     }
     
     public func getString() -> [AnyHashable]? {//process
-        let documentsPathURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        let EDITVIDEOPATH = documentsPathURL!.appendingPathComponent("editedVideo").path
-        let UNZIPPATH = documentsPathURL!.appendingPathComponent("unzip").path
-       
+        
         let imageArray = JSONDIC.value(forKey: "images") as? [AnyHashable]
         var mainArray: [AnyHashable] = []
         for i in 0..<(imageArray?.count ?? 0) {
